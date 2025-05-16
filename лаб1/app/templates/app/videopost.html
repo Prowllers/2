@@ -1,0 +1,53 @@
+{% extends "app/layout.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mb-4">Видео материалы</h2>
+
+    <!-- Первое видео -->
+    <div class="video-wrapper mb-5">
+        <h3>Развязка Сургута</h3>
+        <video class="video-player" controls poster="{% static 'app/content/poster1.jpg' %}">
+            <source src="{% static 'app/content/video1.mp4' %}" type="video/mp4">
+            Ваш браузер не поддерживает видео.
+        </video>
+    </div>
+
+    <!-- Второе видео -->
+    <div class="video-wrapper">
+        <h3>СургутИнформ</h3>
+        <video class="video-player" controls poster="{% static 'app/content/poster2.jpg' %}">
+            <source src="{% static 'app/content/video2.mp4' %}" type="video/mp4">
+            Ваш браузер не поддерживает видео.
+        </video>
+    </div>
+</div>
+
+<style>
+    .video-wrapper {
+        margin-bottom: 40px;
+        text-align: center;
+    }
+
+    .video-player {
+        width: 100%;
+        max-width: 800px;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    h3 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-size: 1.5em;
+    }
+
+    @media (max-width: 768px) {
+        .video-player {
+            max-width: 100%;
+        }
+    }
+</style>
+{% endblock %}

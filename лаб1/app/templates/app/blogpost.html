@@ -1,0 +1,205 @@
+{% extends "app/layout.html" %}
+{% load static %}
+
+{% block content %}
+<div class="article-container">
+    <div class="article-detail">
+        <!-- Заголовок статьи -->
+        <h2 class="article-title">{{ post.title }}</h2>
+
+        <!-- Блок с изображением -->
+        {% if post.image and post.image.url != '/media/temp.jpg' %}
+        <div class="article-image">
+            <img src="{{ post.image.url }}"
+                 alt="{{ post.title }}"
+                 class="img-responsive"
+                 style="max-width: 100%; height: auto; margin: 20px 0; border-radius: 5px;">
+        </div>
+        {% endif %}
+
+        <!-- Мета-данные статьи -->
+        <div class="article-meta">
+            <p class="article-author">
+                <span class="glyphicon glyphicon-user"></span>
+                Автор: {{ post.author.username }}
+            </p>
+            <p class="article-date">
+                <span class="glyphicon glyphicon-calendar"></span>
+                {{ post.posted|date:"d.m.Y H:i" }}
+            </p>
+        </div>
+
+        <!-- Основное содержание -->
+        <div class="article-content">
+            {{ post.content|linebreaksbr }}
+        </div>
+
+        <!-- Кнопка возврата -->
+        <div class="article-footer">
+            <a href="{% url 'blog' %}" class="btn btn-default">
+                <span class="glyphicon glyphicon-arrow-left"></span> Назад к списку статей
+            </a>
+        </div>
+    </div>
+
+    <!-- Секция комментариев -->
+    <div class="comments-section">
+        <h3><i class="fas fa-comments"></i> Комментарии ({{ comments.count }})</h3>
+
+        {% if comments %}
+        <div class="comments-list">
+            {% for comment in comments %}
+            <div class="comment-item">
+                <div class="comment-header">
+                    <span class="comment-author"><i class="fas fa-user"></i> {{ comment.author }}</span>
+                    <span class="comment-date"><i class="far fa-clock"></i> {{ comment.date|date:"d.m.Y H:i" }}</span>
+                </div>
+                <div class="comment-text">
+                    {{ comment.text|linebreaksbr }}
+                </div>
+            </div>
+            {% if not forloop.last %}<hr class="comment-divider">{% endif %}
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-comments">
+            <p>Пока нет комментариев. Будьте первым!</p>
+        </div>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+        <div class="comment-form">
+            <h3><i class="fas fa-comment-dots"></i> Добавить комментарий:</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <textarea name="{{ form.text.name }}"
+                              class="form-control"
+                              rows="4"
+                              placeholder="Введите ваш комментарий...">{{ form.text.value|default:'' }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Отправить комментарий
+                </button>
+            </form>
+        </div>
+        {% else %}
+        <div class="auth-alert">
+            <h3><i class="fas fa-exclamation-circle"></i> Для добавления комментария, пожалуйста, авторизуйтесь</h3>
+            <a href="{% url 'login' %}" class="btn btn-success">
+                <i class="fas fa-sign-in-alt"></i> Войти
+            </a>
+            <a href="{% url 'registration' %}" class="btn btn-info">
+                <i class="fas fa-user-plus"></i> Зарегистрироваться
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+    /* Стили для контейнера */
+    .article-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Стили для основного блока статьи */
+    .article-detail {
+        margin: 20px 0;
+        padding: 25px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    }
+
+    /* Стили для изображения */
+    .article-image img {
+        max-height: 500px;
+        width: auto;
+        display: block;
+        margin: 0 auto;
+        border: 1px solid #ddd;
+        padding: 5px;
+        background: #fff;
+    }
+
+    /* Стили заголовка */
+    .article-title {
+        color: #2c3e50;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+
+    /* Мета-данные */
+    .article-meta {
+        margin-bottom: 20px;
+        color: #7f8c8d;
+        font-size: 0.95em;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    /* Основной текст статьи */
+    .article-content {
+        font-size: 1.15em;
+        line-height: 1.7;
+        margin-bottom: 30px;
+        color: #34495e;
+        text-align: justify;
+    }
+
+    /* Стили для секции комментариев */
+    .comments-section {
+        margin-top: 40px;
+        padding: 25px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    }
+
+        .comments-section h3 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+    /* Стили отдельных комментариев */
+    .comment-item {
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 5px;
+    }
+
+    .comment-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 0.9em;
+    }
+
+    .comment-author {
+        color: #3498db;
+        font-weight: bold;
+    }
+
+    .comment-date {
+        color: #7f8c8d;
+    }
+
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .article-meta {
+            flex-direction: column;
+        }
+
+        .article-image img {
+            max-width: 100%;
+            height: auto;
+        }
+    }
+</style>
+{% endblock %}

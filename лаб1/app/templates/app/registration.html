@@ -1,0 +1,101 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Регистрация пользователя</h2>
+            <form method="POST" class="form-horizontal">
+                {% csrf_token %}
+
+                <!-- Поле имени пользователя -->
+                <div class="form-group">
+                    <label for="id_username" class="col-md-3 control-label">Имя пользователя:</label>
+                    <div class="col-md-9">
+                        {{ form.username }}
+                        <small class="text-muted">{{ form.username.help_text }}</small>
+                        {{ form.username.errors }}
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- Поле email -->
+                <div class="form-group">
+                    <label for="id_email" class="col-md-3 control-label">Email:</label>
+                    <div class="col-md-9">
+                        {{ form.email }}
+                        {{ form.email.errors }}
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- Поле пароля -->
+                <div class="form-group">
+                    <label for="id_password1" class="col-md-3 control-label">Пароль:</label>
+                    <div class="col-md-9">
+                        {{ form.password1 }}
+                        <div class="help-block">{{ form.password1.help_text|safe }}</div>
+                        {{ form.password1.errors }}
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- Подтверждение пароля -->
+                <div class="form-group">
+                    <label for="id_password2" class="col-md-3 control-label">Подтверждение пароля:</label>
+                    <div class="col-md-9">
+                        {{ form.password2 }}
+                        <small class="text-muted">{{ form.password2.help_text }}</small>
+                        {{ form.password2.errors }}
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- Кнопка отправки -->
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button type="submit" class="btn btn-primary">
+                            Зарегистрировать
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    hr {
+        margin: 20px 0;
+        border-top: 1px solid #eee;
+    }
+
+    .help-block ul {
+        padding-left: 20px;
+        margin-top: 5px;
+        margin-bottom: 0;
+    }
+
+    .text-muted {
+        color: #777;
+    }
+
+    .errorlist {
+        color: #a94442;
+        padding-left: 0;
+        list-style: none;
+    }
+</style>
+
+<footer class="text-center" style="margin-top: 30px;">
+    <p>&copy; {{ year }} - Мое Django приложение</p>
+</footer>
+{% endblock %}
